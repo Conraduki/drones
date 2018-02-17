@@ -1,16 +1,13 @@
 #Basic information: when you write time.sleep(x) the program will stop x seconds.
 #Before running THIS code...
     #Requirements: Using MacOsX download APM Planner; if Windows, download MissionPlanner. 
-    #Step 1: Open a terminal and write the following: 
-        #dronekit-sitl copter --home=20.737641,-103.457018,1357,0
-    #Step 1 explanation: This will allow you to run dronekit and set your home location to one of the fields in the campus.
-    #Step 2: Open a different terminal and write the following:
+    #Step 1: Open a different terminal and write the following:
         #mavproxy.py --master tcp:127.0.0.1:5760 --out udp:127.0.0.1:14551 --out udp:YOUR IP:14550
-    #Step 2 explanation: This will connect your dronekit with your drone, allowing to test the code in APM/Mission Planner.
+    #Step 1 explanation: This will connect your dronekit with your drone, allowing to test the code in APM/Mission Planner.
 
 #HECHO POR LUIS CONRADO ALCALA BECERRA
 
-# Lines 17 to 20 are the ones that will allow us to use all the libraries that Python or ,in this case...
+# Lines 14 to 18 are the ones that will allow us to use all the libraries that Python or ,in this case...
 #... Dronekit have available to make easier our work.
 
 #A library is a group of codes already pre-written in Python or some apps that you can download (Dronekit).
@@ -27,7 +24,6 @@ connection_string = sitl.connection_string
 #...security that we usually did by pressing the lighting button in the top or our drone). The value in line...
 #... 27 that is between parenthesis is our Target Altitude, value which we will write when the function is...
 #... called.
-
 def arm_and_takeoff(TargetAltitude):
     #Vehicle Connection
     print ("Executing Takeoff")
@@ -103,11 +99,11 @@ print(">> Control the drone with the arrow keys. Press r for RTL mode")
 root.bind_all('<Key>', key)
 root.mainloop()
 
-Retrieving the voltage of the battery from APM/Mission Planner and showing it to the user.
+#Retrieving the voltage of the battery from APM/Mission Planner and showing it to the user.
 DroneBattery= drone.battery.voltage
 print ('Drone Battery:', DroneBattery, 'V')
 
-#Line 102: Exiting the code.
+#Exiting the code.
 drone.close()
-
+#Closing the connection.
 sitl.stop()
