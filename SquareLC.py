@@ -66,13 +66,14 @@ drone = connect('127.0.0.1:14551' , wait_ready=True)
 arm_and_takeoff(20)
 
 #Line 69: Setting drone speed in m/s
-drone.airspeed = 10
+drone.airspeed = 4
 
 #Lines 73-75: Defining the 3 waypoints to complete the mission. Coordinates in Latitude,Longitude,RelativeAltitude.
 #Latitude and Longitude retrieved from Google Maps.
-FirstWaypoint = LocationGlobalRelative (20.737602, -103.456557, 20)
-SecondWaypoint = LocationGlobalRelative (20.737197, -103.456588, 20)
-ThirdWaypoint = LocationGlobalRelative (20.737234, -103.457055, 20)
+FirstWaypoint = LocationGlobalRelative (20.736770, -103.45470, 20)
+SecondWaypoint = LocationGlobalRelative (20.736745, -103.454287, 20)
+ThirdWaypoint = LocationGlobalRelative (20.736443, -103.454328, 20)
+FourthWaypoint = LocationGlobalRelative (20.736453, -103.454706, 20)
 
 #Lines 79-89: Directing the drone to the 3 waypoints previously defined using a simple_goto command, which allow us...
 #... to change the position (Lat,Lon,Alt) of our drone.
@@ -86,6 +87,10 @@ time.sleep(18)
 
 print("Flying to the third waypoint")
 drone.simple_goto(ThirdWaypoint)
+time.sleep(18)
+
+print("Flying to Fourth Waypoint")
+drone.simple_goto(FourthWaypoint)
 time.sleep(18)
 
 #Lines 92-93: Retrieving the voltage of the battery from APM/Mission Planner and showing it to the user.
