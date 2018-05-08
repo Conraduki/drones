@@ -5,7 +5,7 @@ import RPi.GPIO as GPIO
 #Arm and Takeoff.
 
 def arm_and_takeoff(TargetAltitude):
-#Vehicle Connection
+	#Vehicle Connection
 	print ("Executing Takeoff")
 
 	while not drone.is_armable:
@@ -31,9 +31,6 @@ def arm_and_takeoff(TargetAltitude):
 		if Altitude >= TargetAltitude * 0.95:
 			print("ALtitude has been reached")
 			break
-
-drone = connect('127.0.0.1:14551' , wait_ready=True)
-
 def set_velocity_body(vehicle, vx, vy, vz):
     msg = vehicle.message_factory.set_position_target_local_ned_encode(
             0,
@@ -46,24 +43,24 @@ def set_velocity_body(vehicle, vx, vy, vz):
             0, 0)
     vehicle.send_mavlink(msg)
     vehicle.flush()
-
-def goto_position_target_local_ned(north, east, down):
-    """
-    Send SET_POSITION_TARGET_LOCAL_NED command to request the vehicle fly to a specified
-    location in the North, East, Down frame.
-    """
-    msg = vehicle.message_factory.set_position_target_local_ned_encode(
-        0,       # time_boot_ms (not used)
+def condition_yaw(heading, relative=False):
+    if relative:
+        is_relative=1 #yaw relative to direction of travel
+    else:
+        is_relative=0 #yaw is an absolute angle
+    # create the CONDITION_YAW command using command_long_encode()
+    msg = vehicle.message_factory.command_long_encode(
         0, 0,    # target system, target component
-        mavutil.mavlink.MAV_FRAME_LOCAL_NED, # frame
-        0b0000111111111000, # type_mask (only positions enabled)
-        north, east, down,
-        0, 0, 0, # x, y, z velocity in m/s  (not used)
-        0, 0, 0, # x, y, z acceleration (not supported yet, ignored in GCS_Mavlink)
-        0, 0)    # yaw, yaw_rate (not supported yet, ignored in GCS_Mavlink)
+        mavutil.mavlink.MAV_CMD_CONDITION_YAW, #command
+        0, #confirmation
+        heading,    # param 1, yaw in degrees
+        0,          # param 2, yaw speed deg/s
+        1,          # param 3, direction -1 ccw, 1 cw
+        is_relative, # param 4, relative offset 1, absolute angle 0
+        0, 0, 0)    # param 5 ~ 7 not used
     # send command to vehicle
     vehicle.send_mavlink(msg)
-
+drone = connect('127.0.0.1:14551' , wait_ready=True)
 
 #Define Objective
 Objective= (20.736765,-103.454692,2)
@@ -72,50 +69,167 @@ arm_and_takeoff(2)
 drone.airspeed = .5
 
 #Make parallel
+def getdistance (self)
+	try:
+      	GPIO.setmode(GPIO.BOARD)
 
-try:
-      GPIO.setmode(GPIO.BOARD)
+      	PIN_TRIGGER = 23
+      	PIN_ECHO = 24
 
-      PIN_TRIGGER = 23
-      PIN_ECHO = 24
+      	GPIO.setup(PIN_TRIGGER, GPIO.OUT)
+      	GPIO.setup(PIN_ECHO, GPIO.IN)
 
-      GPIO.setup(PIN_TRIGGER, GPIO.OUT)
-      GPIO.setup(PIN_ECHO, GPIO.IN)
+      	GPIO.output(PIN_TRIGGER, GPIO.LOW)
 
-      GPIO.output(PIN_TRIGGER, GPIO.LOW)
+      	print "Waiting for sensor to settle"
 
-      print "Waiting for sensor to settle"
+      	time.sleep(1)
 
-      time.sleep(1)
+      	print "Calculating distance"
 
-      print "Calculating distance"
+      	GPIO.output(PIN_TRIGGER, GPIO.HIGH)
 
-      GPIO.output(PIN_TRIGGER, GPIO.HIGH)
+      	time.sleep(0.000001)
 
-      time.sleep(0.00001)
+      	GPIO.output(PIN_TRIGGER, GPIO.LOW)
 
-      GPIO.output(PIN_TRIGGER, GPIO.LOW)
-
-      while GPIO.input(PIN_ECHO)==0:
+      	while GPIO.input(PIN_ECHO)==0:
             pulse_start_time = time.time()
-      while GPIO.input(PIN_ECHO)==1:
+      	while GPIO.input(PIN_ECHO)==1:
             pulse_end_time = time.time()
 
-      pulse_duration = pulse_end_time - pulse_start_time
-      distance = round(pulse_duration * 17150, 2)
-      print "Distance:",distance,"cm"
-
-finally:
-      GPIO.cleanup()
-
-
+      	pulse_duration = pulse_end_time - pulse_start_time
+      	distance = round(pulse_duration * 17150, 2)
+      	print "Distance:",distance,"cm"
+      	return distance
+	finally:
+      	GPIO.cleanup()
 
 
-while distance > 220
-	simple_goto(Objective)
+for i in range (0,10):
+	distance=getdistance()
+	face=0
+	condition_yaw(0)
 
-while distance <220
-	set_velocity_body (drone, 0,0,0)
-	goto_position_target_local_ned(0,0,0)
-	goto_position_target_local_ned(0,15,0)
+	if distance<220 and face=0
+		condition_yaw(15)
+		face=15
+		set_velocity_body(drone,.5,0,0)
+		distance=getdistance()
+		elif
+			set_velocity_body(drone,.5,0,0)
+			distance=getdistance() 
+	
+	if distance<220 and face=15
+		condition_yaw(30)
+		face=30
+		set_velocity_body(drone,.5,0,0)
+		distance=getdistance()
+		elif
+			set_velocity_body(drone,.5,0,0)
+			distance=getdistance()
+	
+	if distance<220 and face=30
+		condition_yaw(45)
+		face=45
+		set_velocity_body(drone,.5,0,0)
+		distance=getdistance()
+		elif
+			set_velocity_body(drone,.5,0,0)
+			distance=getdistance()
+	
+	if distance<220 and face=45
+		condition_yaw(60)
+		face=60
+		set_velocity_body(drone,.5,0,0)
+		distance=getdistance()
+		elif
+			set_velocity_body(drone,.5,0,0)	
+			distance=getdistance()
 
+	if distance<220 and face=60
+		condition_yaw(75)
+		face=75
+		set_velocity_body(drone,.5,0,0)
+		distance=getdistance()
+		elif
+			set_velocity_body(drone,.5,0,0)	
+			distance=getdistance()
+
+	if distance<220 and face=75
+		condition_yaw(90)
+		face=90
+		set_velocity_body(drone,.5,0,0)
+		distance=getdistance()
+		elif
+			set_velocity_body(drone,.5,0,0)
+			distance=getdistance()
+	
+	if distance<220 and face=90
+		condition_yaw(345)
+		face=345
+		set_velocity_body(drone,.5,0,0)
+		distance=getdistance()
+		elif
+			set_velocity_body(drone,.5,0,0)
+			distance=getdistance()
+
+	if distance<220 and face=345
+		condition_yaw(330)
+		face=330
+		set_velocity_body(drone,.5,0,0)
+		distance=getdistance()
+		elif
+			set_velocity_body(drone,.5,0,0)
+			distance=getdistance()
+
+	if distance<220 and face=330
+		condition_yaw(315)
+		face=315
+		set_velocity_body(drone,.5,0,0)
+		distance=getdistance()
+		elif
+			set_velocity_body(drone,.5,0,0)
+			distance=getdistance()
+
+	if distance<220 and face=315
+		condition_yaw(300)
+		face=300
+		set_velocity_body(drone,.5,0,0)
+		distance=getdistance()
+		elif
+			set_velocity_body(drone,.5,0,0)
+			distance=getdistance()
+
+	if distance<220 and face=300
+		condition_yaw(285)
+		face=285
+		set_velocity_body(drone,.5,0,0)
+		distance=getdistance()
+		elif
+			set_velocity_body(drone,.5,0,0)
+			distance=getdistance()
+
+	if distance<220 and face=285
+		condition_yaw(270)
+		face=270
+		set_velocity_body(drone,.5,0,0)
+		distance=getdistance()
+		elif
+			set_velocity_body(drone,.5,0,0)
+			distance=getdistance()
+	
+	if distance<220 and face=270
+		condition_yaw(15)
+		face=15
+		set_velocity_body(drone,.5,0,0)
+		distance=getdistance()
+		elif
+			set_velocity_body(drone,.5,0,0)
+			distance=getdistance()
+
+	if distance>220
+		condition_yaw(0)
+		face=0
+		set_velocity_body(drone,.5,0,0)
+		distance=getdistance()
