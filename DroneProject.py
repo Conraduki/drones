@@ -1,6 +1,8 @@
 import time
 from dronekit import connect, VehicleMode, LocationGlobalRelative, Command, LocationGlobal
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
+import dronekit_sitl 
+from pymavlink import mavutil
 
 #Arm and Takeoff.
 
@@ -48,13 +50,13 @@ def set_velocity_body(vehicle, vx, vy, vz):
     vehicle.send_mavlink(msg)
     vehicle.flush()
 
-def condition_yaw(heading, relative=False):
+def condition_yaw(vehicle, heading, relative=False):
     if relative:
         is_relative=1 #yaw relative to direction of travel
     else:
         is_relative=0 #yaw is an absolute angle
     # create the CONDITION_YAW command using command_long_encode()
-    msg = vehicle.message_factory.command_long_encode(
+    msg = drone.message_factory.command_long_encode(
         0, 0,    # target system, target component
         mavutil.mavlink.MAV_CMD_CONDITION_YAW, #command
         0, #confirmation
@@ -64,11 +66,11 @@ def condition_yaw(heading, relative=False):
         is_relative, # param 4, relative offset 1, absolute angle 0
         0, 0, 0)    # param 5 ~ 7 not used
     # send command to vehicle
-    vehicle.send_mavlink(msg)
+    drone.send_mavlink(msg)
 
 #Make parallel
-def getdistance(self):
-	return 300
+def getdistance():
+	return 130
 """	try:
       	GPIO.setmode(GPIO.BOARD)
 
@@ -105,29 +107,33 @@ def getdistance(self):
       	GPIO.cleanup()
 """
 
-def scan(self):
+def scan():
 	for i in range (0,10):
 		distance=getdistance()
 		face=0
-		condition_yaw(0)
+		condition_yaw(drone,0)
 		time.sleep(2)
 
 		if distance<220:
-			condition_yaw(45)
+			condition_yaw(drone,45)
 			time.sleep(2)
 			distance=getdistance()
+			print ("45")
 			if distance<220:
-				condition_yaw(90)
+				condition_yaw(drone,90)
 				time.sleep(2)
 				distance=getdistance()
+				print("90")
 				if distance<220:
-					condition_yaw(315)
+					condition_yaw(drone,315)
 					time.sleep(5)
 					distance=getdistance()
+					print("315")
 					if distance<220:
-						condition_yaw(270)
+						condition_yaw(drone,270)
 						time.sleep(2)
 						distance=getdistance()
+						print("270")
 						if distance<220:
 							drone.mode = VehicleMode("LAND")
 		set_velocity_body(drone,0.5,0,0)
@@ -257,8 +263,12 @@ def scan(self):
 			distance=getdistance()
 """
 
-drone = connect(connection_string , wait_ready=True)
+
+drone = connect('127.0.0.1:14551' , wait_ready=True)
 
 arm_and_takeoff(2)
 
 drone.airspeed = .5
+
+
+scan()
