@@ -112,26 +112,30 @@ def scan():
 		distance=getdistance()
 		face=0
 		condition_yaw(drone,0)
-		time.sleep(2)
-
+		time.sleep(10)
+		set_velocity_body(drone,.005,0,0)
 		if distance<220:
 			condition_yaw(drone,45)
-			time.sleep(2)
+			set_velocity_body(drone,.005,.005,0)
+			time.sleep(10)
 			distance=getdistance()
 			print ("45")
 			if distance<220:
 				condition_yaw(drone,90)
-				time.sleep(2)
+				set_velocity_body(drone,0,.005,0)
+				time.sleep(10)
 				distance=getdistance()
 				print("90")
 				if distance<220:
 					condition_yaw(drone,315)
-					time.sleep(5)
+					set_velocity_body(drone,.005,-.005,0)
+					time.sleep(10)
 					distance=getdistance()
 					print("315")
 					if distance<220:
 						condition_yaw(drone,270)
-						time.sleep(2)
+						set_velocity_body(drone,0,-.005,0)
+						time.sleep(10)
 						distance=getdistance()
 						print("270")
 						if distance<220:
@@ -139,129 +143,6 @@ def scan():
 		set_velocity_body(drone,0.5,0,0)
 		time.sleep(1)
 
-"""		if distance<220 and face=0
-			condition_yaw(15)
-			face=15
-			set_velocity_body(drone,.5,0,0)
-			distance=getdistance()
-			elif
-				set_velocity_body(drone,.5,0,0)
-				distance=getdistance()
-
-		if distance<220 and face=15
-			condition_yaw(30)
-			face=30
-			set_velocity_body(drone,.5,0,0)
-			distance=getdistance()
-			elif
-				set_velocity_body(drone,.5,0,0)
-				distance=getdistance()
-
-		if distance<220 and face=30
-			condition_yaw(45)
-			face=45
-			set_velocity_body(drone,.5,0,0)
-			distance=getdistance()
-			elif
-				set_velocity_body(drone,.5,0,0)
-				distance=getdistance()
-
-		if distance<220 and face=45
-			condition_yaw(60)
-			face=60
-			set_velocity_body(drone,.5,0,0)
-			distance=getdistance()
-			elif
-				set_velocity_body(drone,.5,0,0)
-				distance=getdistance()
-
-		if distance<220 and face=60
-			condition_yaw(75)
-			face=75
-			set_velocity_body(drone,.5,0,0)
-			distance=getdistance()
-			elif
-				set_velocity_body(drone,.5,0,0)
-				distance=getdistance()
-
-		if distance<220 and face=75
-			condition_yaw(90)
-			face=90
-			set_velocity_body(drone,.5,0,0)
-			distance=getdistance()
-			elif
-				set_velocity_body(drone,.5,0,0)
-				distance=getdistance()
-
-		if distance<220 and face=90
-			condition_yaw(345)
-			face=345
-			set_velocity_body(drone,.5,0,0)
-			distance=getdistance()
-			elif
-				set_velocity_body(drone,.5,0,0)
-				distance=getdistance()
-
-		if distance<220 and face=345
-			condition_yaw(330)
-			face=330
-			set_velocity_body(drone,.5,0,0)
-			distance=getdistance()
-			elif
-				set_velocity_body(drone,.5,0,0)
-				distance=getdistance()
-
-		if distance<220 and face=330
-			condition_yaw(315)
-			face=315
-			set_velocity_body(drone,.5,0,0)
-			distance=getdistance()
-			elif
-				set_velocity_body(drone,.5,0,0)
-				distance=getdistance()
-
-		if distance<220 and face=315
-			condition_yaw(300)
-			face=300
-			set_velocity_body(drone,.5,0,0)
-			distance=getdistance()
-			elif
-				set_velocity_body(drone,.5,0,0)
-				distance=getdistance()
-
-		if distance<220 and face=300
-			condition_yaw(285)
-			face=285
-			set_velocity_body(drone,.5,0,0)
-			distance=getdistance()
-			elif
-				set_velocity_body(drone,.5,0,0)
-				distance=getdistance()
-
-		if distance<220 and face=285
-			condition_yaw(270)
-			face=270
-			set_velocity_body(drone,.5,0,0)
-			distance=getdistance()
-			elif
-				set_velocity_body(drone,.5,0,0)
-				distance=getdistance()
-
-		if distance<220 and face=270
-			condition_yaw(15)
-			face=15
-			set_velocity_body(drone,.5,0,0)
-			distance=getdistance()
-			elif
-				set_velocity_body(drone,.5,0,0)
-				distance=getdistance()
-
-		if distance>220
-			condition_yaw(0)
-			face=0
-			set_velocity_body(drone,.5,0,0)
-			distance=getdistance()
-"""
 
 
 drone = connect('127.0.0.1:14551' , wait_ready=True)
