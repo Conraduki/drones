@@ -1,40 +1,37 @@
-#!/usr/bin/python
 import RPi.GPIO as GPIO
 import time
 
-try:
-      GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BCM)
 
-      PIN_TRIGGER = 23
-      PIN_ECHO = 24
+# Pins connected to the HC-SR04 sensor
+iTriggerPin = 23
+iEchoPin    = 24
 
-      GPIO.setup(PIN_TRIGGER, GPIO.OUT)
-      GPIO.setup(PIN_ECHO, GPIO.IN)
+GPIO.setup(iTriggerPin, GPIO.OUT)
+GPIO.setup(iEchoPin, GPIO.IN)
 
-      GPIO.output(PIN_TRIGGER, GPIO.LOW)
+GPIO.output(iTriggerPin, False)
+time.sleep(0.5)
 
-      print "Waiting for sensor to settle"
+while True:
+      GPIO.output(iTriggerPin, True)
+      time.sleep(0.0001)
+      GPIO.output(iTriggerPin, False)
 
-      time.sleep(2)
+      while GPIO.input(iEchoPin) == 0:
+            pass
+      fPulseStart = time.time()
 
-      print "Calculating distance"
+      while GPIO.input(iEchoPin) == 1:
+            pass
+      fPulseEnd = time.time()
 
-      GPIO.output(PIN_TRIGGER, GPIO.HIGH)
+      fPulseDuration = fPulseEnd - fPulseStart
 
-      time.sleep(0.00001)
+      fDistance = round((fPulseDuration * 17150), 2)
 
-      GPIO.output(PIN_TRIGGER, GPIO.LOW)
+      print "Distance:", fDistance, "cm."
 
-      while GPIO.input(PIN_ECHO)==0:
-            pulse_start_time = time.time()
-      while GPIO.input(PIN_ECHO)==1:
-            pulse_end_time = time.time()
+      time.sleep(0.5)
 
-      pulse_duration = pulse_end_time - pulse_start_time
-      distance = round(pulse_duration * 17150, 2)
-      print "Distance:",distance,"cm"
-
-finally:
-      GPIO.cleanup()
-
-      
+GPIO.cleanup()
